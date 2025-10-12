@@ -26,8 +26,9 @@ const allowedOrigins = [
   "http://localhost:5501",
   "http://127.0.0.1:5000",
   "http://localhost:5000",
-  https://shieldstream-pcu9kqs7j-puneetkumar1790s-projects.vercel.app
+  "https://shieldstream-pcu9kqs7j-puneetkumar1790s-projects.vercel.app"
 ];
+
 
 const corsOptions = {
   origin: function (origin, callback) {
