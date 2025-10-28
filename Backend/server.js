@@ -28,8 +28,8 @@ const allowedOrigins = [
   "http://localhost:5000",
   "https://hack-odisha-5-0.vercel.app",
   "https://hackodisha-5-0.onrender.com",
-  // allow vercel preview deploys as well (optional)
-  /^https:\/\/hack-odisha-5-0(\-[a-z0-9]+)?\.vercel\.app$/,
+  // optional: allow Vercel preview deploys
+  /^https:\/\/hack-odisha-5-0.*\.vercel\.app$/,
 ];
 
 const corsOptions = {
