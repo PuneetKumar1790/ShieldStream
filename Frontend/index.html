@@ -3,59 +3,30 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ShieldStream — Stop Piracy. Protect Your Revenue.</title>
+    <title>ShieldStream — Project Archived</title>
 
-    <!-- Inter font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Inter Font -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Tailwind via CDN -->
+    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: "#2563EB",
-              secondary: "#10B981",
-              accent: "#F59E0B",
-              textH: "#1F2937",
-              textB: "#4B5563",
-              surface: "#FFFFFF",
-              bg: "#F9FAFB",
-            },
-          },
-        },
-      };
-    </script>
-
-    <!-- Font Awesome -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-      rel="stylesheet"
-    />
 
     <style>
-      /* Custom CSS for animations */
       .fade-in {
         opacity: 0;
         transform: translateY(20px);
         transition: opacity 0.6s ease-out, transform 0.6s ease-out;
       }
-
       .fade-in.visible {
         opacity: 1;
         transform: translateY(0);
       }
-
-      .pulse-encrypt {
+      .pulse {
         animation: pulse 2s infinite;
       }
-
       @keyframes pulse {
         0% {
           transform: scale(1);
@@ -68,43 +39,41 @@
         }
       }
     </style>
-  <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ShieldStream — Project Archived</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: #f9fafb;
-      color: #111827;
-      text-align: center;
-      padding: 1rem;
-    }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-    p {
-      font-size: 1rem;
-      color: #4b5563;
-      margin-bottom: 1rem;
-    }
-    .spotlight {
-      font-weight: 700;
-      color: #2563eb;
-    }
-  </style>
-</head>
-<body>
-  <h1>ShieldStream is Currently Archived</h1>
-  <p>Thank you for visiting! This project was part of HackOdisha 5.0.</p>
-  <p>🏆 Recognized as a <span class="spotlight">Top Spotlight Project</span></p>
-</body>
+  </head>
+
+  <body
+    class="bg-gray-50 flex flex-col items-center justify-center min-h-screen text-center p-4 font-[Inter]"
+  >
+    <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 fade-in">
+      😎 So you came here from LinkedIn, huh?
+    </h1>
+
+    <p class="text-gray-600 mt-3 max-w-md fade-in">
+      Yep — this is
+      <span class="font-semibold text-blue-600">ShieldStream</span>, my
+      <span class="font-semibold">HackOdisha 5.0</span> submission. The servers
+      may be off, but the impact isn’t.
+      <br />
+      🏆 Recognized as a
+      <span class="font-semibold text-blue-600">Top Spotlight Project</span>.
+    </p>
+
+    <p class="italic text-gray-500 mt-3 fade-in" style="animation-delay: 0.5s">
+      Built with a lot of code... and just a little
+      <span class="text-pink-500 pulse">❤️</span>
+    </p>
+
+    <p class="text-gray-400 mt-2 text-sm fade-in" style="animation-delay: 0.6s">
+      P.S. — If you're here out of curiosity... glad you checked it out 😉
+    </p>
+
+    <script>
+      // simple reveal animation
+      window.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".fade-in").forEach((el, i) => {
+          setTimeout(() => el.classList.add("visible"), i * 150);
+        });
+      });
+    </script>
+  </body>
 </html>
