@@ -28,22 +28,21 @@ const allowedOrigins = [
   "http://localhost:5000",
   "https://hack-odisha-5-0.vercel.app",
   "https://hackodisha-5-0.onrender.com",
-  // optional: allow Vercel preview deploys
-  /^https:\/\/hack-odisha-5-0.*\.vercel\.app$/,
+  // allow vercel preview deploys as well (optional)
+  /^https:\/\/hack-odisha-5-0(\-[a-z0-9]+)?\.vercel\.app$/,
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
     if (
       !origin ||
-      allowedOrigins.some(
-        (o) =>
-          (typeof o === "string" && o === origin) ||
-          (o instanceof RegExp && o.test(origin))
+      allowedOrigins.some((o) =>
+        o instanceof RegExp ? o.test(origin) : o === origin
       )
     ) {
       callback(null, true);
     } else {
+      console.error("❌ CORS blocked origin:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
@@ -53,9 +52,9 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 };
 
+// Must come before any routes
 app.use(cors(corsOptions));
-
-app.options(/^.*$/, cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 // ----------------------------------------------------
 // Body + cookies
