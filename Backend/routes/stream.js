@@ -47,7 +47,7 @@ const generateSASurl = (blobName, expiresMinutes = 2) => {
       containerName,
       blobName,
       permissions: BlobSASPermissions.parse("r"),
-      startsOn: new Date(Date.now() - 1 * 60 * 1000), // allow slight clock skew
+      startsOn: new Date(),
       expiresOn: new Date(Date.now() + expiresMinutes * 60 * 1000),
       protocol: SASProtocol.Https,
     },
