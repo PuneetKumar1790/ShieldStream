@@ -8,7 +8,10 @@ import {
 import { Router } from "express";
 import dotenv from "dotenv";
 import verifyToken from "../middlewares/auth.js";
-import { WatchSession } from "../models/WatchSession.js";
+import {
+  createWatchSession,
+  findWatchSession,
+} from "../lib/memoryDb.js";
 
 dotenv.config();
 const router = Router();
@@ -79,8 +82,10 @@ router.options("/:id/segment/:filename", (req, res) => {
 
 // Serve individual segments with fresh SAS URLs
 router.get("/:id/segment/:filename", verifyToken, async (req, res) => {
+  let videoId = null;
+  let filename = null;
   try {
-    const { id: videoId, filename } = req.params;
+    ({ id: videoId, filename } = req.params);
     const userId = req.user.id;
 
     if (!videoId || !filename) {
@@ -88,7 +93,7 @@ router.get("/:id/segment/:filename", verifyToken, async (req, res) => {
     }
 
     // Verify user has access to this video
-    const session = await WatchSession.findOne({ userId, videoId });
+    const session = await findWatchSession({ userId, videoId });
     if (!session) {
       return res.status(403).json({ msg: "Access denied" });
     }
@@ -144,8 +149,9 @@ router.options("/:id/key", (req, res) => {
 
 // Serve encryption key with fresh SAS URL
 router.get("/:id/key", verifyToken, async (req, res) => {
+  let videoId = null;
   try {
-    const { id: videoId } = req.params;
+    ({ id: videoId } = req.params);
     const userId = req.user.id;
 
     if (!videoId) {
@@ -153,7 +159,7 @@ router.get("/:id/key", verifyToken, async (req, res) => {
     }
 
     // Verify user has access to this video
-    const session = await WatchSession.findOne({ userId, videoId });
+    const session = await findWatchSession({ userId, videoId });
     if (!session) {
       return res.status(403).json({ msg: "Access denied" });
     }
@@ -201,9 +207,9 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (!videoId) return res.status(400).json({ msg: "Video ID missing" });
 
     // Track user session (no hard cutoff - supports full video duration)
-    let session = await WatchSession.findOne({ userId, videoId });
+    let session = await findWatchSession({ userId, videoId });
     if (!session) {
-      session = await WatchSession.create({ userId, videoId });
+      session = await createWatchSession({ userId, videoId });
     }
 
     // Check if Azure credentials are available

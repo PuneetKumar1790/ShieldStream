@@ -1,7 +1,13 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { User } from "../models/User.js";
+import {
+  createUser,
+  findUserById,
+  findUserOne,
+  getUserFields,
+  saveUser,
+} from "../lib/memoryDb.js";
 const router = Router();
 import verifyToken from "../middlewares/auth.js";
 
@@ -21,7 +27,7 @@ router.post("/signup", async (req, res) => {
     }
 
     //Checking existing user
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    const existingUser = await findUserOne({ $or: [{ email }, { username }] });
     if (existingUser) {
       return res.status(400).json({ msg: "User already exists" });
     }
@@ -31,8 +37,7 @@ router.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     //Save user
-    const newUser = new User({ username, email, password: hashedPassword });
-    await newUser.save();
+    await createUser({ username, email, password: hashedPassword });
     res.status(201).json({ msg: "Signup successful" });
   } catch (error) {
     res.status(500).json({ msg: "Signup error", error: error.message });
@@ -48,7 +53,7 @@ router.post("/login", async (req, res) => {
     }
 
     //find user
-    const user = await User.findOne({ email });
+    const user = await findUserOne({ email });
     if (!user) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
@@ -69,7 +74,7 @@ router.post("/login", async (req, res) => {
 
     //Save new refresh token in DB
     user.refreshToken = refreshToken;
-    await user.save();
+    await saveUser(user);
 
     //Send refresh token in cookies
     const isProduction = process.env.NODE_ENV === "production";
@@ -104,10 +109,10 @@ router.post("/logout", async (req, res) => {
       return res.status(204).json({ msg: "No refresh token in browser" });
 
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
-    const user = await User.findById(decoded.id);
+    const user = await findUserById(decoded.id);
     if (!user) return res.status(204).json({ msg: "User not present" });
     user.refreshToken = null; //token changed to null in db
-    await user.save();
+    await saveUser(user);
 
     const isProduction = process.env.NODE_ENV === "production";
     const isCrossOrigin = req.headers.origin && req.headers.origin !== `${req.protocol}://${req.get('host')}`;
@@ -131,7 +136,7 @@ router.post("/logout", async (req, res) => {
 //get current user info
 router.get("/me", verifyToken, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("username email");
+    const user = getUserFields(await findUserById(req.user.id), ["username", "email"]);
 
     if (!user) return res.status(404).json({ msg: "User not found" });
 

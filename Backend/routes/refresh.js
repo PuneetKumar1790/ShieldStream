@@ -1,6 +1,9 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import { User } from "../models/User.js";
+import {
+  findUserById,
+  saveUser,
+} from "../lib/memoryDb.js";
 
 const router = express.Router();
 
@@ -11,7 +14,7 @@ router.post("/", async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
 
-    const user = await User.findById(decoded.id);
+    const user = await findUserById(decoded.id);
     if (!user || user.refreshToken !== token) {
       return res.status(403).json({ msg: "Invalid refresh token" });
     }
@@ -29,7 +32,7 @@ router.post("/", async (req, res) => {
 
     // Rotate refresh token in DB
     user.refreshToken = newRefreshToken;
-    await user.save();
+    await saveUser(user);
 
     // Send cookies
     const isProduction = process.env.NODE_ENV === "production";

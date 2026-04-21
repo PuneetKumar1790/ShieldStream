@@ -10,6 +10,7 @@ import rateLimit from "express-rate-limit";
 import authRoutes from "./routes/auth.js";
 import streamRoutes from "./routes/stream.js";
 import refreshRoutes from "./routes/refresh.js";
+import { setDatabaseReady } from "./lib/memoryDb.js";
 
 dotenv.config();
 
@@ -113,13 +114,13 @@ app.use("/api/stream", streamRoutes);
 // DB connection
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO_URI);
+    setDatabaseReady(true);
     console.log("MongoDB Connected");
   } catch (err) {
+    setDatabaseReady(false);
     console.error("MongoDB Error:", err);
+    console.warn("MongoDB unavailable; running in in-memory fallback mode.");
   }
 };
 
