@@ -111,7 +111,12 @@ app.use("/api/auth", authRoutes);
 app.use("/api/refresh", refreshRoutes);
 app.use("/api/stream", streamRoutes);
 
-// DB connection
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(` Server running on port ${PORT}`);
+});
+
+// DB connection runs in the background so Render can detect the open port immediately.
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
@@ -124,9 +129,4 @@ const connectDB = async () => {
   }
 };
 
-await connectDB();
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(` Server running on port ${PORT}`);
-});
+void connectDB();
