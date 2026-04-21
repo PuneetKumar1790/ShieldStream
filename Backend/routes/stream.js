@@ -285,16 +285,16 @@ https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.m
       });
     }
 
-    // Replace AES key URL with absolute backend proxy URL
+    // Replace AES key URL with a short-lived Azure SAS URL
     m3u8Content = m3u8Content.replace(
-      /URI=".*enc.key"/,
-      `URI="${baseUrl}/api/stream/${videoId}/key"`
+      /URI=".*enc\.key"/,
+      `URI="${generateSASurl("videos/social/enc.key", 2)}"`
     );
 
-    // Replace all .ts segment URLs with absolute backend proxy URLs
+    // Replace all .ts segment URLs with short-lived Azure SAS URLs
     m3u8Content = m3u8Content.replace(
-      /output(\d+).ts/g,
-      (match) => `${baseUrl}/api/stream/${videoId}/segment/${match}`
+      /output(\d+)\.ts/g,
+      (match) => generateSASurl(`videos/social/${match}`, 2)
     );
 
     // Set appropriate headers for HLS streaming
