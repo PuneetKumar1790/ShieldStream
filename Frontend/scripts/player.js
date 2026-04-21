@@ -115,20 +115,27 @@ class SecurePlayer {
     try {
       console.log(`Loading stream for video ID: ${videoId}`);
 
-      // Try to refresh token first to ensure we have valid cookies
-      const tokenRefreshed = await Auth.refreshToken();
-      if (!tokenRefreshed) {
-        this.showError("Authentication failed. Please login again.");
-        return;
-      }
+      const fetchStream = () =>
+        fetch(`${BASE_URL}/api/stream/${videoId}`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Accept: "application/vnd.apple.mpegurl,*/*",
+          },
+        });
 
-      const response = await fetch(`${BASE_URL}/api/stream/${videoId}`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          Accept: "application/vnd.apple.mpegurl,*/*",
-        },
-      });
+      let response = await fetchStream();
+
+      if (response.status === 401) {
+        // Try refreshing once if the access cookie has expired.
+        const tokenRefreshed = await Auth.refreshToken();
+        if (!tokenRefreshed) {
+          this.showError("Authentication failed. Please login again.");
+          return;
+        }
+
+        response = await fetchStream();
+      }
 
       console.log("Response status:", response.status);
       console.log("Response headers:", response.headers);
