@@ -101,9 +101,9 @@ class SecurePlayer {
     this.hideLoading();
     const video = document.getElementById("video");
     video.src =
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+      "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
     video.poster =
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg";
+      "https://interactive-examples.mdn.mozilla.net/media/examples/flower.jpg";
     
     // Add error handling for demo video
     video.addEventListener('error', () => {
