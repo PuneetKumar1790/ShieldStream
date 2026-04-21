@@ -1,97 +1,71 @@
-🛡️ ShieldStream – Secure Video Streaming Platform
+# 🛡️ ShieldStream — Secure Video Streaming Platform
 
-ShieldStream is a piracy-proof video streaming backend that protects premium content with enterprise-grade security.
-Built for hackathons but designed with real-world DRM challenges in mind.
+ShieldStream is a security-focused video streaming backend built to help protect premium content through encrypted delivery, authenticated access, and backend-controlled streaming.
 
-🌍 Why ShieldStream?
+Built as a hackathon prototype, it explores practical protection models for creators and growing platforms that cannot easily adopt enterprise DRM systems.
 
-Digital piracy costs billions every year.
+---
 
-$75B – Global annual revenue lost to digital piracy (Motion Picture Association)
+## 🌍 Why ShieldStream?
 
-₹2,000 Cr – Revenue lost by Indian EdTech in 2024 alone (EY–IAMAI Report)
+Digital piracy continues to create major business challenges across media and education.
 
-62% – Courses experience unauthorized sharing within weeks of launch (VdoCipher Research)
+Industry estimates often cite:
 
-ShieldStream tackles this by combining AES-128 encryption, short-lived SAS URLs, JWT authentication, and secure backend proxying.
+- **$75B+** annual global losses linked to digital piracy  
+- **₹2,000 Cr** estimated losses impacting Indian EdTech ecosystems  
+- **62%** of premium courses facing unauthorized sharing within weeks of launch  
 
-🔐 Key Features
-🚀 Production-Ready Backend Security
+(Indicative public industry estimates used to highlight market demand.)
 
-Secure Upload → Videos uploaded to Azure Blob Storage with automatic HLS segmentation and AES-128 encryption
+ShieldStream is designed to reduce common abuse paths such as exposed links, weak access control, and uncontrolled content delivery.
 
-Rotating JWT Authentication → Short-lived access tokens + one-time refresh tokens (prevents replay attacks)
+---
 
-Time-Limited Access → Dynamic SAS URLs (2 min expiry), HTTPS enforced, prevents link sharing
+## 🔐 Core Features
 
-Proxy Access → Clients never hit Azure directly. All .ts segments and .key files are proxied via backend
+### Secure Upload Pipeline
 
-Session Validation → Each request validated against MongoDB WatchSession (blocks unauthorized playback)
+- Upload premium video content
+- Convert to HLS streaming format (`.m3u8 + .ts`)
+- Apply AES-128 encryption
+- Store assets securely in Azure Blob Storage
 
-🎥 Streaming Technology
+### Authenticated Streaming
 
-HLS Streaming → Adaptive bitrate for smooth playback
+- JWT-based access control
+- Session validation using MongoDB
+- Protected streaming endpoints
 
-AES-128 Encrypted Segments → Protects against raw file downloads
+### Controlled Access
 
-No Direct Blob Access → Azure Blob URLs are hidden, only backend serves media
+- Short-lived signed storage access
+- Backend proxy delivery
+- No direct client exposure to raw storage URLs
 
-Demo Mode → Falls back to sample video if Azure credentials are missing
+### Secure Playback
 
-🛠️ Tech Stack
+- Encrypted HLS segments
+- HTTPS delivery
+- Browser playback via HLS.js
 
-Backend → Node.js + Express
+---
 
-Database → MongoDB (User & Session Management)
+## 🎥 How It Works
 
-Storage → Azure Blob Storage
-
-Encryption → AES-128 + short-lived SAS tokens
-
-Streaming → HLS (HTTP Live Streaming)
-
-⚙️ How It Works
-
-Upload → Content uploaded to Azure → converted into .m3u8 + .ts segments with AES-128 key
-
-Backend Proxy → All segment & key requests routed through /api/stream/:id/...
-
-Authentication → JWT + MongoDB sessions validate every playback request
-
-Time-Limited Access → SAS URLs expire in 2 minutes, forcing secure revalidation
-
-Playback → Frontend HLS player streams content seamlessly
-
-📊 Security Highlights
-
-🔑 AES-128 Encrypted Segments & Keys
-
-🔒 Rotating SAS URLs (2 min expiry)
-
-🚫 No Direct Blob Access (all requests proxied via backend)
-
-🧾 JWT + Session Validation in MongoDB
-
-🌐 HTTPS Enforced for all traffic
-
-📂 Backend Status
-
-Authentication → ✅ Active
-
-Encryption → ✅ AES-128
-
-Storage → ✅ Azure Blob
-
-Streaming → ✅ HLS + Proxy
-
-👨‍💻 Hackathon Ready
-
-✅ Fully working prototype
-
-✅ Real-world inspired DRM security
-
-✅ Clear problem statement & global impact
-
-✅ Scalable architecture
-
-© 2025 ShieldStream. All rights reserved.
+```text
+Upload Video
+   ↓
+Process with FFmpeg
+   ↓
+HLS Segments + AES Encryption
+   ↓
+Store in Azure Blob Storage
+   ↓
+User Login
+   ↓
+JWT + Session Validation
+   ↓
+Backend Proxy Streams Media
+   ↓
+Secure Playback
