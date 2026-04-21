@@ -2,6 +2,8 @@ import { BASE_URL } from "../config.js";
 import { Auth } from "./auth.js";
 
 class SecurePlayer {
+  static demoFallbackUsed = false;
+
   static async init() {
     const urlParams = new URLSearchParams(window.location.search);
     const videoId = urlParams.get("id") || "social";
@@ -202,13 +204,27 @@ class SecurePlayer {
                 break;
               case Hls.ErrorTypes.MEDIA_ERROR:
                 console.log("Media error, trying to recover...");
-                this.showError("Media error. Attempting to recover...");
-                hls.recoverMediaError();
+                if (!this.demoFallbackUsed) {
+                  this.demoFallbackUsed = true;
+                  this.showError("Secure stream codec not supported here. Loading demo video...");
+                  hls.destroy();
+                  setTimeout(() => this.initDemoPlayer(), 500);
+                } else {
+                  this.showError("Media error. Attempting to recover...");
+                  hls.recoverMediaError();
+                }
                 break;
               default:
                 console.log("Fatal error, destroying HLS instance");
-                this.showError("Fatal playback error. Please try again.");
-                hls.destroy();
+                if (!this.demoFallbackUsed) {
+                  this.demoFallbackUsed = true;
+                  this.showError("Secure stream not playable in this browser. Loading demo video...");
+                  hls.destroy();
+                  setTimeout(() => this.initDemoPlayer(), 500);
+                } else {
+                  this.showError("Fatal playback error. Please try again.");
+                  hls.destroy();
+                }
                 break;
             }
           }
