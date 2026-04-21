@@ -2,8 +2,6 @@ import { BASE_URL } from "../config.js";
 import { Auth } from "./auth.js";
 
 class SecurePlayer {
-  static demoFallbackUsed = false;
-
   static async init() {
     const urlParams = new URLSearchParams(window.location.search);
     const videoId = urlParams.get("id") || "social";
@@ -161,8 +159,8 @@ class SecurePlayer {
       // Check if this is demo content (no encryption)
       if (m3u8Content.includes("demo.unified-streaming.com") || 
           m3u8Content.includes("BigBuckBunny.mp4")) {
-        console.log("Detected demo content, switching to demo player");
-        this.initDemoPlayer();
+        console.warn("Detected demo content in secure player path; blocking demo fallback.");
+        this.showError("Secure stream is not configured for demo playback. Please use the Azure stream.");
         return;
       }
 
@@ -204,27 +202,13 @@ class SecurePlayer {
                 break;
               case Hls.ErrorTypes.MEDIA_ERROR:
                 console.log("Media error, trying to recover...");
-                if (!this.demoFallbackUsed) {
-                  this.demoFallbackUsed = true;
-                  this.showError("Secure stream codec not supported here. Loading demo video...");
-                  hls.destroy();
-                  setTimeout(() => this.initDemoPlayer(), 500);
-                } else {
-                  this.showError("Media error. Attempting to recover...");
-                  hls.recoverMediaError();
-                }
+                this.showError("Secure stream codec error. Please use a browser with HLS support.");
+                hls.recoverMediaError();
                 break;
               default:
                 console.log("Fatal error, destroying HLS instance");
-                if (!this.demoFallbackUsed) {
-                  this.demoFallbackUsed = true;
-                  this.showError("Secure stream not playable in this browser. Loading demo video...");
-                  hls.destroy();
-                  setTimeout(() => this.initDemoPlayer(), 500);
-                } else {
-                  this.showError("Fatal playback error. Please try again.");
-                  hls.destroy();
-                }
+                this.showError("Fatal secure playback error. Please try again.");
+                hls.destroy();
                 break;
             }
           }
