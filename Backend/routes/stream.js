@@ -69,7 +69,9 @@ const streamToString = async (readableStream) => {
 
 // Handle preflight requests for segments
 router.options("/:id/segment/:filename", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+  if (req.headers.origin) {
+    res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+  }
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -111,7 +113,9 @@ router.get("/:id/segment/:filename", verifyToken, async (req, res) => {
     // Set appropriate headers for video segment
     res.setHeader("Content-Type", "video/mp2t");
     res.setHeader("Cache-Control", "public, max-age=120"); // Cache for 2 minutes
-    res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+    if (req.headers.origin) {
+      res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+    }
     res.setHeader("Access-Control-Allow-Methods", "GET");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -136,7 +140,9 @@ router.get("/:id/segment/:filename", verifyToken, async (req, res) => {
 
 // Handle preflight requests for key
 router.options("/:id/key", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+  if (req.headers.origin) {
+    res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+  }
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -177,7 +183,9 @@ router.get("/:id/key", verifyToken, async (req, res) => {
     // Set appropriate headers for encryption key
     res.setHeader("Content-Type", "application/octet-stream");
     res.setHeader("Cache-Control", "public, max-age=120"); // Cache for 2 minutes
-    res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+    if (req.headers.origin) {
+      res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+    }
     res.setHeader("Access-Control-Allow-Methods", "GET");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     res.setHeader("Access-Control-Allow-Credentials", "true");
