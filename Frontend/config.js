@@ -20,10 +20,10 @@ if (isLocalhost) {
   }
 } else if (isVercelDeployment) {
   // For Vercel deployment, use the deployed backend
-  BASE_URL = "https://hackodisha-5-0.onrender.com";
+  BASE_URL = "https://shieldstream.onrender.com";
 } else {
   // Fallback for other deployments
-  BASE_URL = "https://hackodisha-5-0.onrender.com";
+  BASE_URL = "https://shieldstream.onrender.com";
 }
 
 // Debug information (remove in production)
