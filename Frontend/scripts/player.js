@@ -337,7 +337,6 @@ class SecurePlayer {
     const shouldAutoplay = video ? !video.paused && !video.ended : false;
 
     console.log(`Refreshing secure stream because ${reason}`);
-    this.showLoading();
 
     try {
       await this.loadStream(videoId, {
